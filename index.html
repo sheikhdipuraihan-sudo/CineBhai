@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c70de" />
+  <meta name="description" content="CineBhai — discover and stream movies in a clean dark cinema experience." />
+  <title>CineBhai — Stream your next favorite movie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Open menu">☰</button>
+        <a class="brand" href="#home" aria-label="CineBhai home"><span class="brand-mark">CB</span><span>Cine<span>Bhai</span></span></a>
+        <nav class="main-nav" id="mainNav">
+          <a class="nav-link active" href="#home">Home</a>
+          <a class="nav-link" href="#movies">Movies</a>
+          <a class="nav-link" href="#genres">Genres</a>
+          <a class="nav-link" href="#admin">Admin</a>
+        </nav>
+        <form class="searchbar" id="searchForm"><input id="searchInput" type="search" placeholder="Search movies..." autocomplete="off" /><button aria-label="Search">⌕</button></form>
+        <button class="surprise-btn" id="surpriseBtn">✦ <span>Surprise me</span></button>
+      </div>
+    </header>
+
+    <main id="app">
+      <section class="announcement"><strong>Welcome to CineBhai</strong><span>Hand-picked movies, bold stories, and a better way to watch.</span></section>
+      <section id="home" class="hero-section"><div class="hero-copy"><p class="eyebrow">NOW STREAMING</p><h1>Stories worth<br /><span>staying up for.</span></h1><p class="hero-text">Explore a handpicked collection of movies and press play on your next favorite.</p><div class="hero-actions"><button class="primary-btn" id="heroPlay">▶ Explore movies</button><button class="ghost-btn" id="heroInfo">View collection</button></div></div><div class="hero-art"><div class="hero-glow"></div><div class="hero-card card-back"></div><div class="hero-card card-mid"></div><div class="hero-card card-front"><img id="heroPoster" alt="Featured movie poster" /></div><span class="floating-note note-one">4K</span><span class="floating-note note-two">NEW</span></div></section>
+
+      <section class="content-wrap" id="movies">
+        <div class="section-heading"><div><p class="eyebrow">CURATED FOR YOU</p><h2>Featured movies</h2></div><button class="text-btn" id="clearSearch">View all <span>→</span></button></div>
+        <div class="movie-grid" id="movieGrid"></div>
+        <div class="empty-state hidden" id="emptyState"><div>⌕</div><h3>No movies found</h3><p>Try another title, genre, or year.</p></div>
+      </section>
+
+      <section class="content-wrap lower-grid"><div><div class="section-heading compact"><div><p class="eyebrow">BROWSE BY MOOD</p><h2>Popular genres</h2></div></div><div class="genre-grid" id="genres"></div></div><aside class="spotlight"><p class="eyebrow">CINEBHAI PICKS</p><h3>Movie night<br /><span>starts here.</span></h3><p>Save your favorites and keep the popcorn close.</p><button class="primary-btn small" id="spotlightBtn">Browse picks →</button></aside></section>
+
+      <section class="admin-panel content-wrap" id="admin"><div class="section-heading"><div><p class="eyebrow">CONTENT MANAGEMENT</p><h2>Admin panel</h2></div><span class="admin-badge">Local library</span></div><p class="admin-intro">Manage the CineBhai catalog directly in your browser. Changes are saved to local storage and immediately appear in the movie grid.</p><form class="movie-form" id="movieForm"><input type="hidden" id="movieId" /><label>Title<input id="title" required placeholder="Movie title" /></label><label>Year<input id="year" required type="number" min="1900" max="2100" placeholder="2026" /></label><label>Genre<input id="genre" required placeholder="Action, Drama" /></label><label>Rating<input id="rating" required type="number" min="0" max="10" step="0.1" placeholder="8.4" /></label><label class="wide">Poster URL<input id="poster" required type="url" placeholder="https://..." /></label><label class="wide">Streaming embed URL<input id="embed" required type="url" placeholder="https://www.youtube.com/embed/..." /></label><label class="wide">Description<textarea id="description" required rows="3" placeholder="Tell viewers about the movie..."></textarea></label><div class="form-actions"><button class="primary-btn" type="submit" id="saveMovie">Add movie</button><button class="ghost-btn hidden" type="button" id="cancelEdit">Cancel edit</button></div></form><div class="admin-table-wrap"><table><thead><tr><th>Movie</th><th>Year</th><th>Genre</th><th>Rating</th><th>Actions</th></tr></thead><tbody id="adminRows"></tbody></table></div></section>
+    </main>
+    <footer><a class="brand" href="#home"><span class="brand-mark">CB</span><span>Cine<span>Bhai</span></span></a><p>Made for movie people. © 2026 CineBhai</p><a href="#admin">Manage library →</a></footer>
+  </div>
+  <div class="modal hidden" id="movieModal" role="dialog" aria-modal="true"><div class="modal-card"><button class="modal-close" id="modalClose">×</button><div class="watch-layout"><div class="video-frame"><iframe id="movieFrame" title="Movie player" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div><div class="watch-copy"><p class="eyebrow">NOW PLAYING</p><h2 id="modalTitle"></h2><div class="meta" id="modalMeta"></div><p id="modalDescription"></p><button class="primary-btn" id="modalPlay">▶ Watch trailer</button></div></div></div></div>
+  <script src="app.js"></script>
+</body>
+</html>
