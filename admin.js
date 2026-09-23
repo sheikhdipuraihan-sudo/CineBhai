@@ -1,3 +1,125 @@
-import{auth,db}from'./firebase.js';import{onAuthStateChanged,signInWithEmailAndPassword,signOut}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';import{collection,getDocs,addDoc,doc,setDoc,deleteDoc,serverTimestamp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';const $=s=>document.querySelector(s),loginPanel=$('#loginPanel'),dashboard=$('#dashboard');let movies=[];onAuthStateChanged(auth,u=>{loginPanel.classList.toggle('hidden',!!u);dashboard.classList.toggle('hidden',!u);if(u)loadRows();});$('#loginForm').addEventListener('submit',async e=>{e.preventDefault();$('#loginError').textContent='';try{await signInWithEmailAndPassword(auth,$('#loginEmail').value,$('#loginPassword').value);}catch(err){$('#loginError').textContent='Sign-in failed. Check your Firebase admin account.';}});$('#logoutButton').addEventListener('click',()=>signOut(auth));
-async function loadRows(){const s=await getDocs(collection(db,'movies'));movies=s.docs.map(d=>({id:d.id,...d.data()}));$('#movieRows').innerHTML=movies.map(m=>{const sections=[m.showHero?'Hero':'',m.showTrending?'Trending':'',m.showCatalog!==false?'Catalog':'',m.showSearch!==false?'Search':''].filter(Boolean).join(', ');return`<tr><td>${esc(m.title)}</td><td>${m.year||''}</td><td>${esc(m.genre||'')}</td><td>${sections||'Hidden'}</td><td><button class="table-action" data-edit="${m.id}">Edit</button><button class="table-action danger" data-delete="${m.id}">Delete</button></td></tr>`}).join('');document.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>fillForm(movies.find(m=>m.id===b.dataset.edit))));document.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',async()=>{if(confirm('Delete this movie?')){await deleteDoc(doc(db,'movies',b.dataset.delete));loadRows();}}));}
-$('#movieForm').addEventListener('submit',async e=>{e.preventDefault();const id=$('#movieId').value,data={title:$('#title').value.trim(),year:Number($('#year').value),genre:$('#genre').value.trim(),rating:Number($('#rating').value)||null,description:$('#description').value.trim(),posterUrl:$('#posterUrl').value.trim(),embedCode:$('#embedCode').value.trim(),showHero:$('#showHero').checked,showTrending:$('#showTrending').checked,showCatalog:$('#showCatalog').checked,showSearch:$('#showSearch').checked,updatedAt:serverTimestamp()};if(id)await setDoc(doc(db,'movies',id),data,{merge:true});else await addDoc(collection(db,'movies'),{...data,createdAt:serverTimestamp()});$('#formMessage').textContent='Saved.';resetForm();loadRows();});function fillForm(m){$('#movieId').value=m.id;['title','year','genre','rating','description','posterUrl','embedCode'].forEach(k=>$('#'+k).value=m[k]??'');$('#showHero').checked=!!m.showHero;$('#showTrending').checked=!!m.showTrending;$('#showCatalog').checked=m.showCatalog!==false;$('#showSearch').checked=m.showSearch!==false;$('#cancelEdit').classList.remove('hidden');window.scrollTo(0,0);}function resetForm(){$('#movieForm').reset();$('#movieId').value='';$('#showCatalog').checked=true;$('#showSearch').checked=true;$('#cancelEdit').classList.add('hidden');}$('#cancelEdit').addEventListener('click',resetForm);function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+import { auth, db } from './firebase.js';
+import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { collection, getDocs, addDoc, doc, setDoc, deleteDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+const $ = (selector) => document.querySelector(selector);
+const loginPanel = $('#loginPanel');
+const dashboard = $('#dashboard');
+const form = $('#movieForm');
+let movies = [];
+
+onAuthStateChanged(auth, async (user) => {
+  loginPanel.classList.toggle('hidden', Boolean(user));
+  dashboard.classList.toggle('hidden', !user);
+  if (user) await loadRows();
+});
+
+$('#loginForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const error = $('#loginError');
+  error.textContent = '';
+  try {
+    await signInWithEmailAndPassword(auth, $('#loginEmail').value.trim(), $('#loginPassword').value);
+  } catch (err) {
+    error.textContent = readableError(err);
+  }
+});
+
+$('#logoutButton').addEventListener('click', () => signOut(auth));
+
+async function loadRows() {
+  try {
+    const snapshot = await getDocs(collection(db, 'movies'));
+    movies = snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
+    $('#movieRows').innerHTML = movies.map((movie) => {
+      const sections = [movie.showHero && 'Hero', movie.showTrending && 'Trending', movie.showCatalog !== false && 'Catalog', movie.showSearch !== false && 'Search'].filter(Boolean).join(', ');
+      return `<tr><td>${escapeHtml(movie.title)}</td><td>${movie.year || ''}</td><td>${escapeHtml(movie.genre || '')}</td><td>${sections || 'Hidden'}</td><td><button class="table-action" data-edit="${movie.id}" type="button">Edit</button><button class="table-action danger" data-delete="${movie.id}" type="button">Delete</button></td></tr>`;
+    }).join('');
+    document.querySelectorAll('[data-edit]').forEach((button) => button.addEventListener('click', () => fillForm(movies.find((movie) => movie.id === button.dataset.edit))));
+    document.querySelectorAll('[data-delete]').forEach((button) => button.addEventListener('click', () => removeMovie(button.dataset.delete)));
+  } catch (err) {
+    showFormMessage(`Could not load movies: ${readableError(err)}`, true);
+  }
+}
+
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const saveButton = form.querySelector('button[type="submit"]');
+  const movieId = $('#movieId').value.trim();
+  const movie = {
+    title: $('#title').value.trim(),
+    year: Number($('#year').value),
+    genre: $('#genre').value.trim(),
+    rating: $('#rating').value === '' ? null : Number($('#rating').value),
+    description: $('#description').value.trim(),
+    posterUrl: $('#posterUrl').value.trim(),
+    embedCode: $('#embedCode').value.trim(),
+    showHero: $('#showHero').checked,
+    showTrending: $('#showTrending').checked,
+    showCatalog: $('#showCatalog').checked,
+    showSearch: $('#showSearch').checked,
+    updatedAt: serverTimestamp()
+  };
+  const validationError = validateMovie(movie);
+  if (validationError) {
+    showFormMessage(validationError, true);
+    return;
+  }
+  saveButton.disabled = true;
+  saveButton.textContent = 'Saving...';
+  showFormMessage('Saving movie...', false);
+  try {
+    if (movieId) await setDoc(doc(db, 'movies', movieId), movie, { merge: true });
+    else await addDoc(collection(db, 'movies'), { ...movie, createdAt: serverTimestamp() });
+    showFormMessage('Movie saved successfully.', false);
+    resetForm();
+    await loadRows();
+  } catch (err) {
+    showFormMessage(`Save failed: ${readableError(err)}`, true);
+  } finally {
+    saveButton.disabled = false;
+    saveButton.textContent = 'Save movie';
+  }
+});
+
+async function removeMovie(id) {
+  if (!confirm('Delete this movie?')) return;
+  try {
+    await deleteDoc(doc(db, 'movies', id));
+    await loadRows();
+    showFormMessage('Movie deleted.', false);
+  } catch (err) {
+    showFormMessage(`Delete failed: ${readableError(err)}`, true);
+  }
+}
+
+function fillForm(movie) {
+  if (!movie) return;
+  $('#movieId').value = movie.id;
+  ['title', 'year', 'genre', 'rating', 'description', 'posterUrl', 'embedCode'].forEach((key) => { $(`#${key}`).value = movie[key] ?? ''; });
+  $('#showHero').checked = Boolean(movie.showHero);
+  $('#showTrending').checked = Boolean(movie.showTrending);
+  $('#showCatalog').checked = movie.showCatalog !== false;
+  $('#showSearch').checked = movie.showSearch !== false;
+  $('#cancelEdit').classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetForm() {
+  form.reset();
+  $('#movieId').value = '';
+  $('#showCatalog').checked = true;
+  $('#showSearch').checked = true;
+  $('#cancelEdit').classList.add('hidden');
+}
+
+$('#cancelEdit').addEventListener('click', resetForm);
+function validateMovie(movie) {
+  if (!movie.title || !movie.year || !movie.genre || !movie.description || !movie.posterUrl || !movie.embedCode) return 'Please complete all required movie fields.';
+  if (!Number.isFinite(movie.year) || movie.year < 1900 || movie.year > 2100) return 'Enter a valid release year.';
+  if (!/^https?:\/\//i.test(movie.posterUrl)) return 'Poster URL must start with http:// or https://.';
+  return '';
+}
+function showFormMessage(message, isError) { const element = $('#formMessage'); element.textContent = message; element.classList.toggle('error', isError); }
+function readableError(error) { if (error?.code === 'permission-denied') return 'Permission denied. Deploy firestore.rules and make sure you are signed in.'; if (error?.code === 'failed-precondition') return 'Firestore is not enabled for this Firebase project.'; return error?.message || 'Unknown Firebase error.'; }
+function escapeHtml(value) { return String(value ?? '').replace(/[&<>']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;' }[character])); }
