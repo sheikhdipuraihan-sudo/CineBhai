@@ -5,12 +5,14 @@ CineBhai is a responsive movie streaming catalog inspired by the supplied dark b
 ## Included
 
 - Responsive CineBhai branded header, hero, movie grid, genre browsing, and footer.
+- Dedicated Trending Now and New Releases rows, with curated live picks.
 - Search by movie title, genre, or year with live filtering.
+- Genre filtering plus Featured, Top Rated, Newest, and A–Z sorting.
 - Clickable movie cards that open a streaming detail modal with poster metadata, description, and an embedded trailer/player URL.
 - Surprise Me button that opens a random title.
 - Admin panel for adding, editing, and deleting movies.
 - Fields for movie name, description, year, genre, rating, poster URL, and streaming embed URL.
-- Catalog changes persisted in browser `localStorage` under `cinebhai_movies`.
+- Catalog changes persisted in browser `localStorage` under `cinebhai_movies`, including a per-title Trending flag.
 
 ## Run locally
 

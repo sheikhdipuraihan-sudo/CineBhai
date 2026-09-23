@@ -19,6 +19,7 @@
         <a class="brand" href="#home" aria-label="CineBhai home"><span class="brand-mark">CB</span><span>Cine<span>Bhai</span></span></a>
         <nav class="main-nav" id="mainNav">
           <a class="nav-link active" href="#home">Home</a>
+          <a class="nav-link" href="#trending">Trending</a>
           <a class="nav-link" href="#movies">Movies</a>
           <a class="nav-link" href="#genres">Genres</a>
           <a class="nav-link" href="#admin">Admin</a>
@@ -32,11 +33,16 @@
       <section class="announcement"><strong>Welcome to CineBhai</strong><span>Hand-picked movies, bold stories, and a better way to watch.</span></section>
       <section id="home" class="hero-section"><div class="hero-copy"><p class="eyebrow">NOW STREAMING</p><h1>Stories worth<br /><span>staying up for.</span></h1><p class="hero-text">Explore a handpicked collection of movies and press play on your next favorite.</p><div class="hero-actions"><button class="primary-btn" id="heroPlay">▶ Explore movies</button><button class="ghost-btn" id="heroInfo">View collection</button></div></div><div class="hero-art"><div class="hero-glow"></div><div class="hero-card card-back"></div><div class="hero-card card-mid"></div><div class="hero-card card-front"><img id="heroPoster" alt="Featured movie poster" /></div><span class="floating-note note-one">4K</span><span class="floating-note note-two">NEW</span></div></section>
 
+      <section class="content-wrap" id="trending"><div class="section-heading"><div><p class="eyebrow">WHAT EVERYONE IS WATCHING</p><h2>Trending now</h2></div><span class="live-dot">● Live picks</span></div><div class="movie-grid" id="trendingGrid"></div></section>
+
       <section class="content-wrap" id="movies">
-        <div class="section-heading"><div><p class="eyebrow">CURATED FOR YOU</p><h2>Featured movies</h2></div><button class="text-btn" id="clearSearch">View all <span>→</span></button></div>
+        <div class="section-heading"><div><p class="eyebrow">CURATED FOR YOU</p><h2>All movies</h2></div><button class="text-btn" id="clearSearch">Clear filters <span>→</span></button></div>
+        <div class="catalog-tools"><label>Genre<select id="genreFilter"><option value="all">All genres</option></select></label><label>Sort<select id="sortFilter"><option value="featured">Featured</option><option value="rating">Top rated</option><option value="newest">Newest</option><option value="title">A–Z</option></select></label><span id="resultCount"></span></div>
         <div class="movie-grid" id="movieGrid"></div>
         <div class="empty-state hidden" id="emptyState"><div>⌕</div><h3>No movies found</h3><p>Try another title, genre, or year.</p></div>
       </section>
+
+      <section class="content-wrap"><div class="section-heading compact"><div><p class="eyebrow">JUST ADDED</p><h2>New releases</h2></div></div><div class="movie-grid" id="newGrid"></div></section>
 
       <section class="content-wrap lower-grid"><div><div class="section-heading compact"><div><p class="eyebrow">BROWSE BY MOOD</p><h2>Popular genres</h2></div></div><div class="genre-grid" id="genres"></div></div><aside class="spotlight"><p class="eyebrow">CINEBHAI PICKS</p><h3>Movie night<br /><span>starts here.</span></h3><p>Save your favorites and keep the popcorn close.</p><button class="primary-btn small" id="spotlightBtn">Browse picks →</button></aside></section>
 
