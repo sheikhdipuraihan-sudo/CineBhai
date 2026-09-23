@@ -4,7 +4,7 @@ CineBhai is a focused, responsive movie catalog with separate pages for Home, Tr
 
 ## Pages
 
-- `index.html` — home, optional hero, trending preview, new releases, genres, and all catalog titles.
+- `index.html` — home, trending preview, new releases, genres, and all catalog titles.
 - `trending.html` — full trending catalog.
 - `new.html` — newest titles.
 - `genres.html` — direct genre links.
@@ -13,7 +13,7 @@ CineBhai is a focused, responsive movie catalog with separate pages for Home, Tr
 - `watch.html?id=...` — Firestore embed player page.
 - `admin.html` — Firebase email/password login and editable movie CRUD.
 
-Every poster is a link containing the Firestore document ID. The admin editor supports title, description, year, genre, rating, direct poster URL, streaming URL or iframe code, and four publishing destinations: **Hero**, **Trending**, **All movies**, and **Search**. Uncheck all destinations to keep a movie searchable only if Search remains enabled, or fully hidden if all are disabled.
+Every poster is a link containing the Firestore document ID. The admin editor supports title, description, year, genre, rating, direct poster URL, streaming URL or iframe code, and three publishing destinations: **Trending**, **All movies**, and **Search**. Uncheck all destinations to keep a movie hidden.
 
 ## Firebase setup
 

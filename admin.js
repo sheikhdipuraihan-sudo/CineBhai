@@ -32,7 +32,7 @@ async function loadRows() {
     const snapshot = await getDocs(collection(db, 'movies'));
     movies = snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
     $('#movieRows').innerHTML = movies.map((movie) => {
-      const sections = [movie.showHero && 'Hero', movie.showTrending && 'Trending', movie.showCatalog !== false && 'Catalog', movie.showSearch !== false && 'Search'].filter(Boolean).join(', ');
+      const sections = [movie.showTrending && 'Trending', movie.showCatalog !== false && 'Catalog', movie.showSearch !== false && 'Search'].filter(Boolean).join(', ');
       return `<tr><td>${escapeHtml(movie.title)}</td><td>${movie.year || ''}</td><td>${escapeHtml(movie.genre || '')}</td><td>${sections || 'Hidden'}</td><td><button class="table-action" data-edit="${movie.id}" type="button">Edit</button><button class="table-action danger" data-delete="${movie.id}" type="button">Delete</button></td></tr>`;
     }).join('');
     document.querySelectorAll('[data-edit]').forEach((button) => button.addEventListener('click', () => fillForm(movies.find((movie) => movie.id === button.dataset.edit))));
@@ -54,7 +54,6 @@ form.addEventListener('submit', async (event) => {
     description: $('#description').value.trim(),
     posterUrl: $('#posterUrl').value.trim(),
     embedCode: $('#embedCode').value.trim(),
-    showHero: $('#showHero').checked,
     showTrending: $('#showTrending').checked,
     showCatalog: $('#showCatalog').checked,
     showSearch: $('#showSearch').checked,
@@ -97,7 +96,6 @@ function fillForm(movie) {
   if (!movie) return;
   $('#movieId').value = movie.id;
   ['title', 'year', 'genre', 'rating', 'description', 'posterUrl', 'embedCode'].forEach((key) => { $(`#${key}`).value = movie[key] ?? ''; });
-  $('#showHero').checked = Boolean(movie.showHero);
   $('#showTrending').checked = Boolean(movie.showTrending);
   $('#showCatalog').checked = movie.showCatalog !== false;
   $('#showSearch').checked = movie.showSearch !== false;
