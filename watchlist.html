@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Watchlist — CineBhai</title>
+  <meta name="description" content="Your personal saved movies on CineBhai.">
+  <meta name="theme-color" content="#08080c">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header"></header>
+
+  <main class="page">
+    <section class="page-intro">
+      <div class="page-intro-header">
+        <div>
+          <p class="kicker">PERSONAL COLLECTION</p>
+          <h1>❤️ My Watchlist</h1>
+          <p class="muted">Your private bookmarked movies, ready to watch anytime.</p>
+        </div>
+        <div>
+          <button class="button ghost danger" id="clearWatchlistBtn" style="display: none;">
+            Clear Watchlist
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="catalog-section">
+      <div id="watchlistGrid" class="movie-grid"></div>
+      
+      <div id="watchlistEmpty" class="empty-state">
+        <div class="empty-icon">🔖</div>
+        <h3>Your watchlist is empty</h3>
+        <p>Explore the movie catalog and click the heart icon on any movie to save it for later.</p>
+        <a class="button primary" href="index.html">Discover Movies</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"></footer>
+
+  <script type="module" src="watchlist.js"></script>
+</body>
+</html>
