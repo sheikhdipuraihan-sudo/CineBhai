@@ -1,1 +1,50 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Search — CineBhai</title><link rel="stylesheet" href="styles.css"></head><body><header class="site-header"><a class="brand" href="index.html"><span>CineBhai</span></a><nav><a href="index.html">Home</a><a href="trending.html">Trending</a><a href="new.html">New Releases</a><a href="genres.html">Genres</a></nav><form class="header-search" id="searchForm"><input id="searchInput" placeholder="Search titles, genres..."><button>Search</button></form></header><main class="page"><section class="page-intro"><p class="kicker">SEARCH RESULTS</p><h1>Results.</h1><p id="searchLabel" class="muted">Matching titles from CineBhai.</p></section><section class="catalog-section"><div id="allGrid" class="movie-grid"></div><div id="allEmpty" class="empty">No movies matched your search.</div></section></main><footer class="site-footer"><span>CineBhai</span><a href="index.html">Back to home</a></footer><script type="module" src="site.js"></script><script>const q=new URLSearchParams(location.search).get('q')||'';document.getElementById('searchLabel').textContent=`Results for “${q}”`;</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Search Results — CineBhai</title>
+  <meta name="theme-color" content="#08080c">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header"></header>
+
+  <main class="page">
+    <section class="page-intro">
+      <div class="page-intro-header">
+        <div>
+          <p class="kicker">SEARCH RESULTS</p>
+          <h1 id="searchHeading">Search Movies</h1>
+          <p class="muted" id="searchSubheading">Matching titles, genres, and stories across the CineBhai catalog.</p>
+        </div>
+        <div>
+          <span class="muted" id="searchCount"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="catalog-section">
+      <div id="allGrid" class="movie-grid"></div>
+      <div id="allEmpty" class="empty-state hidden">
+        <div class="empty-icon">🔍</div>
+        <h3>No matching movies found</h3>
+        <p>Try searching with different keywords, genres, or actor names.</p>
+        <a class="button secondary" href="index.html">← Return to Home</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"></footer>
+
+  <script type="module" src="site.js"></script>
+  <script>
+    const query = new URLSearchParams(window.location.search).get('q') || '';
+    if (query) {
+      document.title = `Search: "${query}" — CineBhai`;
+      const heading = document.getElementById('searchHeading');
+      if (heading) heading.textContent = `Results for “${query}”`;
+    }
+  </script>
+</body>
+</html>
