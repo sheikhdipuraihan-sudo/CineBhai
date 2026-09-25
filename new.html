@@ -1,1 +1,40 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>New Releases — CineBhai</title><link rel="stylesheet" href="styles.css"></head><body><header class="site-header"><a class="brand" href="index.html"><span>CineBhai</span></a><nav><a href="index.html">Home</a><a href="trending.html">Trending</a><a class="active" href="new.html">New Releases</a><a href="genres.html">Genres</a></nav><form class="header-search" id="searchForm"><input id="searchInput" placeholder="Search titles, genres..."><button>Search</button></form></header><main class="page"><section class="page-intro"><p class="kicker">RECENTLY ADDED</p><h1>New releases.</h1><p class="muted">Fresh movies added to the CineBhai library.</p></section><section class="catalog-section"><div id="newGrid" class="movie-grid"></div><div id="newEmpty" class="empty">No movies have been added yet.</div></section></main><footer class="site-footer"><span>CineBhai</span><a href="index.html">Back to home</a></footer><script type="module" src="site.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New Releases — CineBhai</title>
+  <meta name="description" content="Discover recently released and freshly added movies on CineBhai.">
+  <meta name="theme-color" content="#08080c">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header"></header>
+
+  <main class="page">
+    <section class="page-intro">
+      <div class="page-intro-header">
+        <div>
+          <p class="kicker">FRESH ARRIVALS</p>
+          <h1>✨ New Releases</h1>
+          <p class="muted">Explore freshly added titles and contemporary film releases.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="catalog-section">
+      <div id="newGrid" class="movie-grid"></div>
+      <div id="newEmpty" class="empty-state hidden">
+        <div class="empty-icon">🍿</div>
+        <h3>No new releases found</h3>
+        <p>Stay tuned — fresh movie titles are continuously added to our collection.</p>
+        <a class="button secondary" href="index.html">← Back to Home</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"></footer>
+
+  <script type="module" src="site.js"></script>
+</body>
+</html>
