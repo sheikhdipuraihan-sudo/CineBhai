@@ -2,7 +2,9 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /movies/{movieId} {
+      // Anyone can read movie catalog items
       allow read: if true;
+      // Only authenticated users (Admin) can write/update/delete
       allow write: if request.auth != null;
     }
   }
