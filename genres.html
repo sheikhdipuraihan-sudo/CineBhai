@@ -1,1 +1,40 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Genres — CineBhai</title><link rel="stylesheet" href="styles.css"></head><body><header class="site-header"><a class="brand" href="index.html"><span>CineBhai</span></a><nav><a href="index.html">Home</a><a href="trending.html">Trending</a><a href="new.html">New Releases</a><a class="active" href="genres.html">Genres</a></nav><form class="header-search" id="searchForm"><input id="searchInput" placeholder="Search titles, genres..."><button>Search</button></form></header><main class="page"><section class="page-intro"><p class="kicker">BROWSE THE LIBRARY</p><h1>Genres.</h1><p class="muted">Choose a genre and see every matching title.</p></section><section class="catalog-section"><div id="genreList" class="genre-list large"></div><div id="genreEmpty" class="empty">Genres will appear when movies are added.</div></section></main><footer class="site-footer"><span>CineBhai</span><a href="index.html">Back to home</a></footer><script type="module" src="site.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Movie Genres — CineBhai</title>
+  <meta name="description" content="Browse movies by genre on CineBhai.">
+  <meta name="theme-color" content="#08080c">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header"></header>
+
+  <main class="page">
+    <section class="page-intro">
+      <div class="page-intro-header">
+        <div>
+          <p class="kicker">CATEGORIES</p>
+          <h1>🎭 Movie Genres</h1>
+          <p class="muted">Find your exact flavor of cinema from our curated collection.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="catalog-section">
+      <div id="genreList" class="genre-grid"></div>
+      <div id="genreEmpty" class="empty-state hidden">
+        <div class="empty-icon">📁</div>
+        <h3>No genres available yet</h3>
+        <p>Categories will appear automatically once movies are added to the library.</p>
+        <a class="button secondary" href="index.html">← Back to Home</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"></footer>
+
+  <script type="module" src="site.js"></script>
+</body>
+</html>
