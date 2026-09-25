@@ -1,1 +1,52 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Genre — CineBhai</title><link rel="stylesheet" href="styles.css"></head><body><header class="site-header"><a class="brand" href="index.html"><span>CineBhai</span></a><nav><a href="index.html">Home</a><a href="trending.html">Trending</a><a href="new.html">New Releases</a><a class="active" href="genres.html">Genres</a></nav><form class="header-search" id="searchForm"><input id="searchInput" placeholder="Search titles, genres..." aria-label="Search movies"><button>Search</button></form></header><main class="page"><section class="page-intro"><p class="kicker">GENRE COLLECTION</p><h1 id="genreTitle">Movies.</h1><p class="muted">Browse every CineBhai title in this genre.</p></section><section class="catalog-section"><div id="allGrid" class="movie-grid"></div><div id="allEmpty" class="empty">No movies found in this genre.</div></section></main><footer class="site-footer"><span>CineBhai</span><a href="genres.html">All genres</a></footer><script type="module" src="site.js"></script><script>const genre=new URLSearchParams(location.search).get('genre')||'Genre';document.getElementById('genreTitle').textContent=genre+'.';document.title=genre+' — CineBhai';</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Genre Catalog — CineBhai</title>
+  <meta name="theme-color" content="#08080c">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header"></header>
+
+  <main class="page">
+    <section class="page-intro">
+      <div class="page-intro-header">
+        <div>
+          <p class="kicker">GENRE CATALOG</p>
+          <h1 id="genreHeading">Genre Movies</h1>
+          <p class="muted" id="genreSubheading">Curated titles matching this cinematic genre.</p>
+        </div>
+        <div>
+          <a class="button ghost" href="genres.html">← All Genres</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="catalog-section">
+      <div id="allGrid" class="movie-grid"></div>
+      <div id="allEmpty" class="empty-state hidden">
+        <div class="empty-icon">🎬</div>
+        <h3>No movies found in this genre</h3>
+        <p>Check out other genres or browse the full movie library.</p>
+        <a class="button secondary" href="genres.html">Explore Other Genres</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"></footer>
+
+  <script type="module" src="site.js"></script>
+  <script>
+    const param = new URLSearchParams(window.location.search).get('genre') || '';
+    if (param) {
+      document.title = `${param} Movies — CineBhai`;
+      const heading = document.getElementById('genreHeading');
+      if (heading) heading.textContent = `${param} Movies`;
+      const subheading = document.getElementById('genreSubheading');
+      if (subheading) subheading.textContent = `All catalog titles classified under ${param}.`;
+    }
+  </script>
+</body>
+</html>
