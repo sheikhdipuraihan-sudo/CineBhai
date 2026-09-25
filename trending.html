@@ -1,1 +1,43 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Trending — CineBhai</title><link rel="stylesheet" href="styles.css"></head><body><header class="site-header"><a class="brand" href="index.html"><span>CineBhai</span></a><nav><a href="index.html">Home</a><a class="active" href="trending.html">Trending</a><a href="new.html">New Releases</a><a href="genres.html">Genres</a></nav><form class="header-search" id="searchForm"><input id="searchInput" placeholder="Search titles, genres..."><button>Search</button></form></header><main class="page"><section class="page-intro"><p class="kicker">CINEBHAI PICKS</p><h1>Trending now.</h1><p class="muted">The titles viewers are watching right now.</p></section><section class="catalog-section"><div id="trendingGrid" class="movie-grid"></div><div id="trendingEmpty" class="empty">No trending movies yet.</div></section></main><footer class="site-footer"><span>CineBhai</span><a href="index.html">Back to home</a></footer><script type="module" src="site.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trending Movies — CineBhai</title>
+  <meta name="description" content="Explore what viewers are watching right now on CineBhai.">
+  <meta name="theme-color" content="#08080c">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header"></header>
+
+  <main class="page">
+    <section class="page-intro">
+      <div class="page-intro-header">
+        <div>
+          <p class="kicker">CINEBHAI PICKS</p>
+          <h1>🔥 Trending Movies</h1>
+          <p class="muted">The most-watched, highest-rated titles currently captivating audiences.</p>
+        </div>
+        <div>
+          <span class="muted" id="trendingCount">Loading...</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="catalog-section">
+      <div id="trendingGrid" class="movie-grid"></div>
+      <div id="trendingEmpty" class="empty-state hidden">
+        <div class="empty-icon">🔥</div>
+        <h3>No trending titles cataloged</h3>
+        <p>Featured movies will be visible here once trending flags are applied.</p>
+        <a class="button secondary" href="index.html">← Back to Home</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"></footer>
+
+  <script type="module" src="site.js"></script>
+</body>
+</html>
