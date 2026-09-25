@@ -1,1 +1,34 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Movie — CineBhai</title><link rel="stylesheet" href="styles.css"></head><body><header class="site-header"><a class="brand" href="index.html"><span>CineBhai</span></a><nav><a href="index.html">Home</a><a href="index.html#movies">Movies</a><a href="index.html#genres">Genres</a></nav><form class="header-search" action="index.html"><input name="q" placeholder="Search titles, genres..." aria-label="Search movies"><button>Search</button></form></header><main class="page"><div id="movieDetail" class="detail-page"><p class="muted">Loading movie...</p></div></main><footer class="site-footer"><span>CineBhai</span><a href="index.html">Back to library</a></footer><script type="module" src="movie.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Movie Details — CineBhai</title>
+  <meta name="theme-color" content="#08080c">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header"></header>
+
+  <main class="page">
+    <div id="movieDetail" class="detail-hero">
+      <div class="empty-state" style="margin: 40px auto; max-width: 600px;">
+        <div class="skeleton-line skeleton-shimmer" style="width: 60%; height: 28px; margin: 0 auto 16px;"></div>
+        <div class="skeleton-line skeleton-shimmer" style="width: 40%; height: 16px; margin: 0 auto;"></div>
+      </div>
+    </div>
+
+    <!-- Related Movies ("More Like This") -->
+    <section id="relatedSection" class="catalog-section" style="display: none;">
+      <div class="section-head">
+        <h2>More Like This</h2>
+      </div>
+      <div id="relatedGrid" class="movie-grid"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer"></footer>
+
+  <script type="module" src="movie.js"></script>
+</body>
+</html>
