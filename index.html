@@ -1,1 +1,94 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CineBhai — Movies</title><link rel="stylesheet" href="styles.css"></head><body><header class="site-header"><a class="brand" href="index.html"><span>CineBhai</span></a><nav><a class="active" href="index.html">Home</a><a href="trending.html">Trending</a><a href="new.html">New Releases</a><a href="genres.html">Genres</a></nav><form class="header-search" id="searchForm"><input id="searchInput" placeholder="Search titles, genres..." aria-label="Search movies"><button>Search</button></form></header><main class="page"><section class="page-intro"><div><p class="kicker">CINEBHAI MOVIE LIBRARY</p><h1>Find your next movie.</h1><p class="muted">Browse the latest additions, trending titles, and your favorite genres.</p></div></section><section id="movies" class="catalog-section"><div class="section-title"><h2>Trending</h2><a class="section-link" href="trending.html">View all →</a></div><div id="trendingGrid" class="movie-grid"></div><div id="trendingEmpty" class="empty">No trending movies yet.</div></section><section class="catalog-section"><div class="section-title"><h2>New releases</h2><a class="section-link" href="new.html">View all →</a></div><div id="newGrid" class="movie-grid"></div><div id="newEmpty" class="empty">No movies have been added yet.</div></section><section id="genres" class="catalog-section"><div class="section-title"><h2>Genres</h2><a class="section-link" href="genres.html">View all →</a></div><div id="genreList" class="genre-list"></div><div id="genreEmpty" class="empty">Genres will appear when movies are added.</div></section><section class="catalog-section"><div class="section-title"><h2>All movies</h2><select id="genreFilter"><option value="">All genres</option></select></div><div id="allGrid" class="movie-grid"></div><div id="allEmpty" class="empty">No movies found.</div></section></main><footer class="site-footer"><span>CineBhai</span><span>Movie discovery, kept simple.</span></footer><script type="module" src="site.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CineBhai — Stream & Discover Movies</title>
+  <meta name="description" content="CineBhai is a modern, responsive movie catalog and streaming platform with curated trending movies, new releases, and genres.">
+  <meta property="og:title" content="CineBhai — Stream & Discover Movies">
+  <meta property="og:description" content="Discover trending movies, explore genres, and stream your favorite cinema in high definition.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#08080c">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Standardized Dynamic Header -->
+  <header class="site-header"></header>
+
+  <main class="page">
+    <!-- Dynamic Hero Spotlight Banner -->
+    <section id="heroSpotlight" class="hero-spotlight"></section>
+
+    <!-- Continue Watching Section (Populated via Local Storage) -->
+    <section id="continueSection" class="catalog-section" style="display: none;">
+      <div class="section-head">
+        <h2>Continue Watching</h2>
+      </div>
+      <div id="continueGrid" class="movie-grid"></div>
+    </section>
+
+    <!-- Trending Movies Section -->
+    <section id="trendingSection" class="catalog-section">
+      <div class="section-head">
+        <h2>🔥 Trending Now</h2>
+        <a class="section-link" href="trending.html">View all <span>→</span></a>
+      </div>
+      <div id="trendingGrid" class="movie-grid"></div>
+      <div id="trendingEmpty" class="empty-state hidden">
+        <div class="empty-icon">🎬</div>
+        <h3>No trending movies yet</h3>
+        <p>Featured titles will appear here once designated as trending in the catalog.</p>
+      </div>
+    </section>
+
+    <!-- New Releases Section -->
+    <section id="newSection" class="catalog-section">
+      <div class="section-head">
+        <h2>✨ New Releases</h2>
+        <a class="section-link" href="new.html">View all <span>→</span></a>
+      </div>
+      <div id="newGrid" class="movie-grid"></div>
+      <div id="newEmpty" class="empty-state hidden">
+        <div class="empty-icon">🍿</div>
+        <h3>No new releases found</h3>
+        <p>Check back shortly as new titles are added regularly.</p>
+      </div>
+    </section>
+
+    <!-- Browse by Genre Section -->
+    <section id="genreSection" class="catalog-section">
+      <div class="section-head">
+        <h2>🎭 Popular Genres</h2>
+        <a class="section-link" href="genres.html">Explore all <span>→</span></a>
+      </div>
+      <div id="genreList" class="genre-grid"></div>
+      <div id="genreEmpty" class="empty-state hidden">
+        <div class="empty-icon">📁</div>
+        <h3>Genres catalog updating</h3>
+        <p>Categories will automatically populate as titles are cataloged.</p>
+      </div>
+    </section>
+
+    <!-- All Movies Complete Library -->
+    <section id="allMovies" class="catalog-section">
+      <div class="section-head">
+        <h2>All Movies Library</h2>
+        <select id="genreFilter" class="filter-select" aria-label="Filter movies by genre">
+          <option value="">All genres</option>
+        </select>
+      </div>
+      <div id="allGrid" class="movie-grid"></div>
+      <div id="allEmpty" class="empty-state hidden">
+        <div class="empty-icon">🔍</div>
+        <h3>No titles found</h3>
+        <p>Try selecting a different genre or searching for another title.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Standardized Dynamic Footer -->
+  <footer class="site-footer"></footer>
+
+  <script type="module" src="site.js"></script>
+</body>
+</html>
