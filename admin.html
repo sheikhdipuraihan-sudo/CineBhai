@@ -79,80 +79,73 @@
       <div class="admin-card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
           <h2 style="font-size: 20px;" id="formTitle">Add New Movie</h2>
-          <span class="muted" style="font-size: 13px;">Fill in details or paste media links below</span>
+          <span class="muted" style="font-size: 13px;">Paste an IMDb link to auto-fill details, then paste the player embed</span>
         </div>
 
         <form id="movieForm">
           <input id="movieId" type="hidden">
 
-          <div class="admin-preview-split">
-            <!-- Form Inputs Grid -->
-            <div class="admin-form-grid">
-              <div class="form-group col-span-2">
-                <label for="title">Movie Title *</label>
-                <input id="title" required placeholder="e.g. Oppenheimer">
-              </div>
+          <!-- Hidden fields populated automatically from OMDb. Kept in the DOM
+               (just not shown) so the rest of the app can keep reading these
+               same ids when it builds the movie object to save. -->
+          <input id="imdbId" type="hidden">
+          <input id="title" type="hidden">
+          <input id="year" type="hidden">
+          <input id="genre" type="hidden">
+          <input id="rating" type="hidden">
+          <input id="posterUrl" type="hidden">
+          <textarea id="description" style="display:none;"></textarea>
 
-              <div class="form-group">
-                <label for="year">Release Year *</label>
-                <input id="year" required type="number" min="1900" max="2100" placeholder="2024">
+          <div class="admin-form-grid">
+            <div class="form-group col-span-2">
+              <label for="imdbLink">IMDb Link or ID *</label>
+              <div style="display: flex; gap: 10px;">
+                <input
+                  id="imdbLink"
+                  required
+                  placeholder="https://www.imdb.com/title/tt3896198/ or tt3896198"
+                  style="flex: 1;"
+                >
+                <button type="button" id="fetchImdbBtn" class="button secondary" style="white-space: nowrap;">
+                  Fetch Info
+                </button>
               </div>
+              <span id="imdbFetchStatus" class="muted" style="font-size: 12px; display: block; margin-top: 6px;"></span>
+            </div>
 
-              <div class="form-group">
-                <label for="genre">Genres (comma separated) *</label>
-                <input id="genre" required placeholder="Action, Sci-Fi, Drama">
-              </div>
-
-              <div class="form-group">
-                <label for="rating">Rating (0 - 10)</label>
-                <input id="rating" type="number" min="0" max="10" step="0.1" placeholder="8.6">
-              </div>
-
-              <div class="form-group">
-                <label for="posterUrl">Direct Poster URL (HTTPS) *</label>
-                <input id="posterUrl" required type="url" placeholder="https://image.tmdb.org/... or Catbox/ImgBB">
-              </div>
-
-              <div class="form-group col-span-2">
-                <label for="embedCode">Streaming URL / Video Link / Embed Code *</label>
-                <textarea 
-                  id="embedCode" 
-                  required 
-                  rows="3" 
-                  placeholder="Paste YouTube watch link, Vimeo, Dailymotion, direct MP4 link, or <iframe> embed code"
-                ></textarea>
-              </div>
-
-              <div class="form-group col-span-2">
-                <label for="description">Storyline / Synopsis *</label>
-                <textarea id="description" required rows="4" placeholder="Brief overview of the movie..."></textarea>
-              </div>
-
-              <div class="form-group col-span-2">
-                <label>Publication Visibility</label>
-                <div class="checkbox-group">
-                  <label class="checkbox-label">
-                    <input id="showTrending" type="checkbox"> 🔥 Trending Showcase
-                  </label>
-                  <label class="checkbox-label">
-                    <input id="showCatalog" type="checkbox" checked> 📚 Main Catalog
-                  </label>
-                  <label class="checkbox-label">
-                    <input id="showSearch" type="checkbox" checked> 🔍 Search Results
-                  </label>
-                </div>
+            <!-- Read-only preview of what OMDb returned, so the admin can
+                 confirm it before saving, without it being an editable field -->
+            <div class="form-group col-span-2 hidden" id="imdbPreview" style="background: var(--bg-main); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px 14px; display: flex; gap: 14px; align-items: center;">
+              <img id="imdbPreviewPoster" src="" alt="" style="width: 54px; height: 80px; object-fit: cover; border-radius: 4px; flex-shrink: 0;">
+              <div style="font-size: 13px; line-height: 1.5;">
+                <strong id="imdbPreviewTitle"></strong>
+                <div class="muted" id="imdbPreviewMeta"></div>
               </div>
             </div>
 
-            <!-- Live Poster Preview Box -->
-            <div class="live-preview-box">
-              <span class="muted" style="font-size: 12px; margin-bottom: 10px;">POSTER PREVIEW</span>
-              <img 
-                id="livePosterPreview" 
-                class="preview-poster-img" 
-                src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'300\' viewBox=\'0 0 200 300\'%3E%3Crect width=\'100%25\' height=\'100%25\' fill=\'%2314141e\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' fill=\'%23555566\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-size=\'12\'%3EImage Preview%3C/text%3E%3C/svg%3E" 
-                alt="Live Preview"
-              >
+            <div class="form-group col-span-2">
+              <label for="embedCode">Streaming URL / Video Link / Embed Code *</label>
+              <textarea
+                id="embedCode"
+                required
+                rows="3"
+                placeholder="Paste YouTube watch link, Vimeo, Dailymotion, direct MP4 link, or <iframe> embed code"
+              ></textarea>
+            </div>
+
+            <div class="form-group col-span-2">
+              <label>Publication Visibility</label>
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input id="showTrending" type="checkbox"> 🔥 Trending Showcase
+                </label>
+                <label class="checkbox-label">
+                  <input id="showCatalog" type="checkbox" checked> 📚 Main Catalog
+                </label>
+                <label class="checkbox-label">
+                  <input id="showSearch" type="checkbox" checked> 🔍 Search Results
+                </label>
+              </div>
             </div>
           </div>
 
@@ -168,10 +161,10 @@
       <div class="admin-card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
           <h2 style="font-size: 20px;">Movie Database</h2>
-          <input 
-            type="search" 
-            id="tableSearchInput" 
-            placeholder="Filter database..." 
+          <input
+            type="search"
+            id="tableSearchInput"
+            placeholder="Filter database..."
             style="background: var(--bg-main); border: 1px solid var(--border-subtle); padding: 8px 14px; border-radius: var(--radius-sm); font-size: 13px; width: 240px;"
           >
         </div>
