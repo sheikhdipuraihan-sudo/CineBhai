@@ -19,9 +19,10 @@ const $ = (selector) => document.querySelector(selector);
 const loginPanel = $('#loginPanel');
 const dashboard = $('#dashboard');
 const form = $('#movieForm');
-const posterInput = $('#posterUrl');
-const posterPreview = $('#livePosterPreview');
 const tableSearch = $('#tableSearchInput');
+
+const OMDB_API_KEY = 'aeab382f';
+const PLACEHOLDER_POSTER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='300' viewBox='0 0 200 300'%3E%3Crect width='100%25' height='100%25' fill='%2314141e'/%3E%3Ctext x='50%25' y='50%25' fill='%23555566' dominant-baseline='middle' text-anchor='middle' font-size='12'%3ENo Poster%3C/text%3E%3C/svg%3E";
 
 let allMovies = [];
 
@@ -59,16 +60,77 @@ $('#logoutButton').addEventListener('click', async () => {
   showToast('Signed out of admin console', 'info');
 });
 
-// Live Poster Preview Synchronizer
-posterInput.addEventListener('input', () => {
-  const url = posterInput.value.trim();
-  if (/^https?:\/\//i.test(url)) {
-    posterPreview.src = url;
-    posterPreview.onerror = () => {
-      posterPreview.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='300' viewBox='0 0 200 300'%3E%3Crect width='100%25' height='100%25' fill='%2314141e'/%3E%3Ctext x='50%25' y='50%25' fill='%23e50914' dominant-baseline='middle' text-anchor='middle' font-size='11'%3EInvalid Image URL%3C/text%3E%3C/svg%3E";
-    };
+// --- IMDb / OMDb Auto-Fill --------------------------------------------
+
+function extractImdbId(raw) {
+  const match = (raw || '').match(/tt\d{5,9}/i);
+  return match ? match[0].toLowerCase() : null;
+}
+
+$('#fetchImdbBtn').addEventListener('click', async () => {
+  const statusElem = $('#imdbFetchStatus');
+  const fetchBtn = $('#fetchImdbBtn');
+  const rawInput = $('#imdbLink').value.trim();
+  const imdbId = extractImdbId(rawInput);
+
+  if (!imdbId) {
+    statusElem.textContent = 'Enter a valid IMDb link or ID (e.g. tt3896198).';
+    statusElem.style.color = 'var(--crimson)';
+    return;
+  }
+
+  fetchBtn.disabled = true;
+  fetchBtn.textContent = 'Fetching...';
+  statusElem.textContent = 'Looking up on OMDb...';
+  statusElem.style.color = 'var(--text-muted)';
+
+  try {
+    const res = await fetch(`https://www.omdbapi.com/?i=${encodeURIComponent(imdbId)}&apikey=${OMDB_API_KEY}`);
+    const data = await res.json();
+
+    if (data.Response === 'False') {
+      throw new Error(data.Error || 'Title not found on OMDb.');
+    }
+
+    applyOmdbData(imdbId, data);
+    statusElem.textContent = `Loaded "${data.Title}" (${data.Year}) from OMDb.`;
+    statusElem.style.color = 'var(--green)';
+  } catch (err) {
+    statusElem.textContent = `Lookup failed: ${err.message || err}`;
+    statusElem.style.color = 'var(--crimson)';
+  } finally {
+    fetchBtn.disabled = false;
+    fetchBtn.textContent = 'Fetch Info';
   }
 });
+
+function applyOmdbData(imdbId, data) {
+  const poster = (data.Poster && data.Poster !== 'N/A') ? data.Poster : '';
+  const rating = (data.imdbRating && data.imdbRating !== 'N/A') ? Number(data.imdbRating) : '';
+  const year = (data.Year || '').match(/\d{4}/)?.[0] || '';
+
+  $('#imdbId').value = imdbId;
+  $('#title').value = data.Title || '';
+  $('#year').value = year;
+  $('#genre').value = data.Genre || '';
+  $('#rating').value = rating;
+  $('#posterUrl').value = poster;
+  $('#description').value = (data.Plot && data.Plot !== 'N/A') ? data.Plot : '';
+
+  // Normalize the visible field to a clean IMDb link
+  $('#imdbLink').value = `https://www.imdb.com/title/${imdbId}/`;
+
+  // Show read-only preview
+  const preview = $('#imdbPreview');
+  $('#imdbPreviewPoster').src = poster || PLACEHOLDER_POSTER;
+  $('#imdbPreviewPoster').onerror = () => { $('#imdbPreviewPoster').src = PLACEHOLDER_POSTER; };
+  $('#imdbPreviewTitle').textContent = `${data.Title || 'Untitled'} (${year || '—'})`;
+  $('#imdbPreviewMeta').textContent = [
+    data.Genre || 'Genre unknown',
+    rating ? `★ ${rating}` : null
+  ].filter(Boolean).join(' · ');
+  preview.classList.remove('hidden');
+}
 
 // Load Movies from Firestore
 async function loadMovies() {
@@ -172,6 +234,7 @@ form.addEventListener('submit', async (e) => {
   const movieId = $('#movieId').value.trim();
 
   const movie = {
+    imdbId: $('#imdbId').value.trim(),
     title: $('#title').value.trim(),
     year: Number($('#year').value),
     genre: $('#genre').value.trim(),
@@ -239,15 +302,29 @@ function fillForm(movie) {
   $('#saveMovieBtn').textContent = 'Update Movie';
   $('#movieId').value = movie.id;
 
-  ['title', 'year', 'genre', 'rating', 'description', 'posterUrl', 'embedCode'].forEach((key) => {
+  ['imdbId', 'title', 'year', 'genre', 'rating', 'description', 'posterUrl', 'embedCode'].forEach((key) => {
     $(`#${key}`).value = movie[key] ?? '';
   });
+
+  $('#imdbLink').value = movie.imdbId ? `https://www.imdb.com/title/${movie.imdbId}/` : '';
+
+  if (movie.title) {
+    const preview = $('#imdbPreview');
+    $('#imdbPreviewPoster').src = movie.posterUrl || PLACEHOLDER_POSTER;
+    $('#imdbPreviewPoster').onerror = () => { $('#imdbPreviewPoster').src = PLACEHOLDER_POSTER; };
+    $('#imdbPreviewTitle').textContent = `${movie.title} (${movie.year || '—'})`;
+    $('#imdbPreviewMeta').textContent = [
+      movie.genre || 'Genre unknown',
+      movie.rating ? `★ ${movie.rating}` : null
+    ].filter(Boolean).join(' · ');
+    preview.classList.remove('hidden');
+  }
 
   $('#showTrending').checked = Boolean(movie.showTrending);
   $('#showCatalog').checked = movie.showCatalog !== false;
   $('#showSearch').checked = movie.showSearch !== false;
 
-  posterInput.dispatchEvent(new Event('input'));
+  $('#imdbFetchStatus').textContent = '';
   $('#cancelEdit').classList.remove('hidden');
 
   window.scrollTo({ top: $('#movieForm').offsetTop - 90, behavior: 'smooth' });
@@ -257,26 +334,25 @@ function fillForm(movie) {
 function resetForm() {
   form.reset();
   $('#movieId').value = '';
+  $('#imdbId').value = '';
   $('#formTitle').textContent = 'Add New Movie';
   $('#saveMovieBtn').textContent = 'Save Movie';
   $('#showCatalog').checked = true;
   $('#showSearch').checked = true;
   $('#cancelEdit').classList.add('hidden');
-  posterPreview.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='300' viewBox='0 0 200 300'%3E%3Crect width='100%25' height='100%25' fill='%2314141e'/%3E%3Ctext x='50%25' y='50%25' fill='%23555566' dominant-baseline='middle' text-anchor='middle' font-size='12'%3EImage Preview%3C/text%3E%3C/svg%3E";
+  $('#imdbPreview').classList.add('hidden');
+  $('#imdbFetchStatus').textContent = '';
 }
 
 $('#cancelEdit').addEventListener('click', resetForm);
 
 // Helper Validator
 function validateMovie(movie) {
-  if (!movie.title || !movie.year || !movie.genre || !movie.description || !movie.posterUrl || !movie.embedCode) {
-    return 'Please complete all required fields.';
+  if (!movie.title || !movie.year || !movie.genre || !movie.embedCode) {
+    return 'Fetch a valid IMDb title and fill in the embed/streaming field.';
   }
   if (!Number.isFinite(movie.year) || movie.year < 1888 || movie.year > 2100) {
-    return 'Please enter a valid release year.';
-  }
-  if (!/^https?:\/\//i.test(movie.posterUrl)) {
-    return 'Poster URL must be a valid HTTP/HTTPS link.';
+    return 'Fetched release year looks invalid — try fetching again.';
   }
   return '';
 }
