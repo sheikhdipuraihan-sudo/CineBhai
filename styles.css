@@ -1713,3 +1713,80 @@ body.theater-mode .cinema-player-box {
     font-size: 14px;
   }
 }
+
+/* Editorial cinema refresh: quieter surfaces, stronger hierarchy, lighter motion. */
+:root {
+  --bg-base: #0b0d0f;
+  --bg-deep: #101316;
+  --bg-card: #15191c;
+  --bg-card-hover: #1b2024;
+  --text-main: #f4f1eb;
+  --text-secondary: #a9aaa6;
+  --text-muted: #777b78;
+  --crimson: #d9574f;
+  --crimson-light: #ef766b;
+  --crimson-gradient: linear-gradient(135deg, #e36a5f 0%, #ae3936 100%);
+  --crimson-subtle: rgba(217, 87, 79, 0.12);
+  --border-glass: rgba(244, 241, 235, 0.1);
+  --border-glass-hover: rgba(244, 241, 235, 0.22);
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --shadow-md: 0 16px 36px rgba(0, 0, 0, 0.28);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg-base);
+  background-image: radial-gradient(ellipse 80% 38% at 50% -12%, rgba(217, 87, 79, 0.13), transparent 65%), linear-gradient(180deg, #101316 0%, #0b0d0f 45%, #080a0b 100%);
+}
+.site-header {
+  background: rgba(11, 13, 15, 0.9);
+  border-bottom-color: rgba(244, 241, 235, 0.08);
+  backdrop-filter: blur(18px);
+}
+.header-inner { max-width: 1320px; height: 72px; padding-inline: 28px; gap: 28px; }
+.brand { font-size: 22px; letter-spacing: -0.7px; }
+.brand-badge { width: 36px; height: 34px; border-radius: 9px; box-shadow: 0 5px 18px rgba(217, 87, 79, 0.24); }
+.brand-text { text-shadow: none; }
+.nav-menu a { font-size: 13px; border-radius: 8px; padding: 8px 12px; }
+.nav-menu a.active { box-shadow: none; }
+.header-search-trigger { width: 220px; background: rgba(244, 241, 235, 0.055); border-radius: 9px; }
+.page { max-width: 1320px; padding-inline: 28px; }
+.hero-spotlight {
+  min-height: 520px;
+  margin: 28px 0 64px;
+  border-radius: 18px;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.36);
+}
+.hero-overlay { background: linear-gradient(90deg, rgba(8, 10, 11, 0.98) 0%, rgba(8, 10, 11, 0.72) 46%, rgba(8, 10, 11, 0.12) 100%), linear-gradient(0deg, rgba(8, 10, 11, 0.88), transparent 65%); }
+.hero-content { max-width: 650px; padding: 52px; }
+.hero-badge { background: var(--crimson-gradient); border-radius: 5px; letter-spacing: 1.2px; }
+.hero-title { font-size: clamp(42px, 5vw, 68px); letter-spacing: -2.8px; line-height: .98; text-shadow: none; }
+.hero-synopsis { color: #c3c5c0; max-width: 560px; font-size: 15px; }
+.button { border-radius: 8px; font-size: 13px; font-weight: 700; }
+.button.primary { box-shadow: 0 8px 20px rgba(217, 87, 79, 0.2); }
+.catalog-section { margin-top: 68px; }
+.section-head { margin-bottom: 20px; }
+.section-head h2 { font-family: var(--font-display); font-size: 22px; letter-spacing: -0.5px; }
+.section-link { color: #c5c7c2; font-size: 12px; }
+.movie-grid { grid-template-columns: repeat(auto-fill, minmax(176px, 1fr)); gap: 18px; }
+.movie-card { border-radius: 12px; border-color: rgba(244, 241, 235, 0.08); box-shadow: 0 8px 22px rgba(0,0,0,.14); }
+.movie-card:hover { transform: translateY(-4px); box-shadow: 0 16px 30px rgba(0, 0, 0, 0.3); }
+.poster-wrapper img { transition: transform .28s ease; }
+.movie-card:hover .poster-wrapper img { transform: scale(1.035); }
+.poster-overlay { background: linear-gradient(0deg, rgba(8, 10, 11, .8), transparent 68%); }
+.play-btn-circle { width: 48px; height: 48px; background: var(--crimson-gradient); box-shadow: 0 8px 22px rgba(217, 87, 79, .28); }
+.card-info { padding: 14px 14px 16px; }
+.card-title { font-size: 14px; letter-spacing: -.2px; }
+.card-metadata { color: var(--text-muted); font-size: 11px; }
+.genre-card { min-height: 112px; border-radius: 12px; background: linear-gradient(135deg, #1b2024, #121619); border-color: rgba(244, 241, 235, .08); }
+.genre-card:hover { transform: translateY(-3px); border-color: rgba(217, 87, 79, .45); }
+.site-footer { background: #080a0b; padding-top: 58px; }
+.brand-badge::after { animation: none; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+@media (max-width: 760px) {
+  .header-inner, .page { padding-inline: 18px; }
+  .hero-spotlight { min-height: 460px; margin-top: 18px; }
+  .hero-content { padding: 30px 24px; }
+  .movie-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+}
