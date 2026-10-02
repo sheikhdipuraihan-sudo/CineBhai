@@ -95,6 +95,8 @@
           <input id="rating" type="hidden">
           <input id="posterUrl" type="hidden">
           <textarea id="description" style="display:none;"></textarea>
+          <input id="type" type="hidden" value="movie">
+          <textarea id="episodes" style="display:none;"></textarea>
 
           <div class="admin-form-grid">
             <div class="form-group col-span-2">
@@ -131,6 +133,19 @@
                 rows="3"
                 placeholder="Paste YouTube watch link, Vimeo, Dailymotion, direct MP4 link, or <iframe> embed code"
               ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="type">Content Type</label>
+              <select id="type">
+                <option value="movie">Movie</option>
+                <option value="series">Series</option>
+              </select>
+            </div>
+            <div class="form-group col-span-2">
+              <label for="episodes">Episodes (one JSON object per line)</label>
+              <textarea id="episodes" rows="4" placeholder='{"number":1,"title":"Pilot","embedCode":"https://..."}'></textarea>
+              <span class="muted" style="font-size:12px;">For series, add episode number, title, and embedCode or videoUrl.</span>
             </div>
 
             <div class="form-group col-span-2">

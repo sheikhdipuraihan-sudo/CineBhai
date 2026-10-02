@@ -8,7 +8,8 @@ import {
   attachWatchlistListeners, 
   isInWatchlist, 
   toggleWatchlist, 
-  showToast 
+  showToast,
+  resolveStreamingMedia
 } from './shared.js';
 
 renderHeader();
@@ -70,6 +71,13 @@ async function loadMovie(movieId) {
     const releaseDate = movie.releaseDate || movie.release_date;
     const ageRating = movie.ageRating || movie.contentRating || movie.certification;
     const trailerUrl = movie.trailerUrl || movie.trailer || movie.youtubeTrailer;
+    const playerSource = movie.embedCode || movie.videoUrl || movie.streamUrl || movie.playerUrl;
+    const episodes = Array.isArray(movie.episodes) ? movie.episodes : [];
+    const extraDetails = [
+      ['Awards', movie.awards], ['Box office', movie.boxOffice], ['Writer', movie.writer || movie.writers],
+      ['Production', movie.production], ['Rated', movie.rated], ['DVD', movie.dvd], ['Metascore', movie.metascore],
+      ['IMDb votes', movie.imdbVotes], ['Type', movie.type], ['Season count', movie.totalSeasons]
+    ].filter(([, value]) => value && value !== 'N/A');
     const detailFacts = [
       ['Release date', releaseDate],
       ['Runtime', runtime],
@@ -83,6 +91,7 @@ async function loadMovie(movieId) {
       <div class="detail-backdrop" style="background-image: url('${escapeHtml(movie.posterUrl || '')}');"></div>
       <div class="detail-container">
         <div class="detail-poster-box">
+          ${playerSource ? `<div class="detail-inline-player" aria-label="Video player preview">${resolveStreamingMedia(playerSource, movie.title || 'Movie Player').html}</div>` : ''}
           <img 
             src="${escapeHtml(movie.posterUrl || '')}" 
             alt="${escapeHtml(movie.title || 'Movie')} Poster"
@@ -135,6 +144,8 @@ async function loadMovie(movieId) {
           ${trailerUrl ? `<a class="button ghost detail-trailer" href="${escapeHtml(trailerUrl)}" target="_blank" rel="noopener noreferrer">Watch Trailer <span aria-hidden="true">↗</span></a>` : ''}
         </div>
       </div>
+      ${playerSource ? `<section class="detail-player-section"><div class="detail-player-heading"><span class="kicker">Now available</span><h2>Watch ${escapeHtml(movie.title || 'this title')}</h2></div><div class="detail-player-box">${resolveStreamingMedia(playerSource, movie.title || 'Movie Player').html}</div></section>` : ''}
+      ${extraDetails.length || episodes.length ? `<section class="detail-data-section"><div class="detail-data-heading"><span class="kicker">Complete credits & metadata</span><h2>More Details</h2></div>${extraDetails.length ? `<div class="detail-data-grid">${extraDetails.map(([label, value]) => `<div class="detail-fact"><span>${escapeHtml(label)}</span><strong>${escapeHtml(Array.isArray(value) ? value.join(', ') : String(value))}</strong></div>`).join('')}</div>` : ''}${episodes.length ? `<div class="detail-list-panel"><h3>Episodes</h3><div class="episode-list">${episodes.map((episode, index) => `<div class="episode-item"><strong>Episode ${escapeHtml(episode.number || index + 1)}</strong><span>${escapeHtml(episode.title || episode.name || 'Untitled episode')}</span>${episode.embedCode || episode.videoUrl ? `<a class="button ghost" href="${escapeHtml(episode.embedCode || episode.videoUrl)}" target="_blank" rel="noopener noreferrer">Watch</a>` : ''}</div>`).join('')}</div></div>` : ''}</section>` : ''}
       ${screenshots.length ? `<section class="detail-media-section"><div class="detail-section-heading"><span class="kicker">Inside the movie</span><h2>Stills & Screenshots</h2></div><div class="screenshot-grid">${screenshots.map((image, index) => `<figure><img src="${escapeHtml(image)}" alt="${escapeHtml(movie.title || 'Movie')} screenshot ${index + 1}" loading="lazy"></figure>`).join('')}</div></section>` : ''}
     `;
 

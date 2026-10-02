@@ -242,6 +242,8 @@ form.addEventListener('submit', async (e) => {
     description: $('#description').value.trim(),
     posterUrl: $('#posterUrl').value.trim(),
     embedCode: $('#embedCode').value.trim(),
+    type: $('#type').value.trim() || 'movie',
+    episodes: parseEpisodes($('#episodes').value),
     showTrending: $('#showTrending').checked,
     showCatalog: $('#showCatalog').checked,
     showSearch: $('#showSearch').checked,
@@ -307,6 +309,8 @@ function fillForm(movie) {
   });
 
   $('#imdbLink').value = movie.imdbId ? `https://www.imdb.com/title/${movie.imdbId}/` : '';
+  $('#type').value = movie.type || 'movie';
+  $('#episodes').value = (movie.episodes || []).map(episode => JSON.stringify(episode)).join('\n');
 
   if (movie.title) {
     const preview = $('#imdbPreview');
@@ -345,6 +349,12 @@ function resetForm() {
 }
 
 $('#cancelEdit').addEventListener('click', resetForm);
+
+function parseEpisodes(raw) {
+  return String(raw || '').split('\n').map(line => line.trim()).filter(Boolean).map((line, index) => {
+    try { return JSON.parse(line); } catch { return { number: index + 1, title: line }; }
+  });
+}
 
 // Helper Validator
 function validateMovie(movie) {
