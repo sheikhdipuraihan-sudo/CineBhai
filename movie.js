@@ -60,6 +60,24 @@ async function loadMovie(movieId) {
     const inList = isInWatchlist(movie.id);
     const ratingNum = movie.rating ? Number(movie.rating).toFixed(1) : null;
     const genres = String(movie.genre || '').split(',').map(g => g.trim()).filter(Boolean);
+    const listValue = (value) => Array.isArray(value) ? value.filter(Boolean) : String(value || '').split(',').map(item => item.trim()).filter(Boolean);
+    const cast = listValue(movie.cast || movie.actors || movie.starring);
+    const screenshots = listValue(movie.screenshots || movie.gallery || movie.backdrops || movie.images);
+    const runtime = movie.runtime || movie.duration || movie.runTime;
+    const director = movie.director || movie.directors;
+    const language = movie.language || movie.languages;
+    const country = movie.country || movie.countries;
+    const releaseDate = movie.releaseDate || movie.release_date;
+    const ageRating = movie.ageRating || movie.contentRating || movie.certification;
+    const trailerUrl = movie.trailerUrl || movie.trailer || movie.youtubeTrailer;
+    const detailFacts = [
+      ['Release date', releaseDate],
+      ['Runtime', runtime],
+      ['Director', director],
+      ['Language', language],
+      ['Country', country],
+      ['Age rating', ageRating]
+    ].filter(([, value]) => value);
 
     root.innerHTML = `
       <div class="detail-backdrop" style="background-image: url('${escapeHtml(movie.posterUrl || '')}');"></div>
@@ -111,8 +129,13 @@ async function loadMovie(movieId) {
               Share
             </button>
           </div>
+
+          ${detailFacts.length ? `<div class="detail-facts" aria-label="Movie information">${detailFacts.map(([label, value]) => `<div class="detail-fact"><span>${escapeHtml(label)}</span><strong>${escapeHtml(Array.isArray(value) ? value.join(', ') : String(value))}</strong></div>`).join('')}</div>` : ''}
+          ${cast.length ? `<div class="detail-cast"><h3>Cast</h3><p>${escapeHtml(cast.join(' • '))}</p></div>` : ''}
+          ${trailerUrl ? `<a class="button ghost detail-trailer" href="${escapeHtml(trailerUrl)}" target="_blank" rel="noopener noreferrer">Watch Trailer <span aria-hidden="true">↗</span></a>` : ''}
         </div>
       </div>
+      ${screenshots.length ? `<section class="detail-media-section"><div class="detail-section-heading"><span class="kicker">Inside the movie</span><h2>Stills & Screenshots</h2></div><div class="screenshot-grid">${screenshots.map((image, index) => `<figure><img src="${escapeHtml(image)}" alt="${escapeHtml(movie.title || 'Movie')} screenshot ${index + 1}" loading="lazy"></figure>`).join('')}</div></section>` : ''}
     `;
 
     // Interactive button bindings
